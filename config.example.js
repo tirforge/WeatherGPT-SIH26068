@@ -7,5 +7,12 @@ window.WG_CONFIG = {
   groqEndpoint: "https://api.groq.com/openai/v1/chat/completions",
 
   // Map style - 100% FREE, no keys: "osm" | "esri-sat"
-  mapStyle: "osm"
+  mapStyle: "osm",
+
+  // Scalable backend (optional): FastAPI base URL + WS /ws/alerts
+  backendBase: "http://localhost:8000",
+
+  // Telegram alerts (optional) - bot token from @BotFather + your chat ID
+  telegramBotToken: "",
+  telegramChatId: ""
 };

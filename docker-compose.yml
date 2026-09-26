@@ -1,0 +1,31 @@
+# WeatherGPT scalable stack: FastAPI + Postgres/PostGIS + MQTT (WIS2.0 bridge) 
+services:
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-groq/compound-mini}
+    depends_on:
+      - db
+      - mqtt
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: weathergpt
+      POSTGRES_USER: wg
+      POSTGRES_PASSWORD: wgpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./backend/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+volumes:
+  pgdata:
