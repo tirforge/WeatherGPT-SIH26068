@@ -1895,8 +1895,8 @@
     topo: { label: 'Topo', dark: false },
     sat: { label: 'Satellite', dark: true }
   };
-  try { WG.mapStyle = localStorage.getItem('wg-map-style') || 'sat'; } catch (e) { WG.mapStyle = 'sat'; }
-  if (!MAP_STYLES[WG.mapStyle]) WG.mapStyle = 'sat';
+  try { WG.mapStyle = localStorage.getItem('wg-map-style') || 'streets'; } catch (e) { WG.mapStyle = 'streets'; }
+  if (!MAP_STYLES[WG.mapStyle]) WG.mapStyle = 'streets';
   function wgTileLayer(kind) {
     if (kind === 'topo') return L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenStreetMap · SRTM | style © OpenTopoMap' });
     if (kind === 'sat') return L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Powered by Esri · Maxar · Earthstar' });
