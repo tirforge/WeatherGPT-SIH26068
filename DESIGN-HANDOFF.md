@@ -1,6 +1,6 @@
 # weathergpt-repo implementation handoff
 
-This archive is the source of truth for turning the design into production code. Start from `city-weather.html`, then preserve the visual system, responsive behavior, and interactions found in the exported files.
+This archive is the source of truth for turning the design into production code. Start from `city.html`, then preserve the visual system, responsive behavior, and interactions found in the exported files.
 
 ## Implementation target
 - Build production UI from the exported design, not a loose reinterpretation.
@@ -10,7 +10,7 @@ This archive is the source of truth for turning the design into production code.
 - Treat this handoff as a visual contract: if implementation choices conflict, match the exported pixels and behavior first, then refactor internals.
 
 ## Source map
-- Primary entry: `city-weather.html`
+- Primary entry: `city.html`
 - HTML screens detected: 2
 - Stylesheets detected: 0
 - Script/component files detected: 0
@@ -43,7 +43,7 @@ For responsive web exports, treat these as a modern breakpoint system for one ad
 - Use `DESIGN-MANIFEST.json` as the machine-readable map for screens, app modules, OS widgets, landing pages, tokens, interactions, and viewport checks.
 - Screen-file-first: when multiple user-facing surfaces exist, implement each HTML screen as its own route/file. Treat `index.html` as a launcher/overview when the manifest marks it that way, not as a combined final UI.
 - If `landing.html`, app screens, platform screens, or OS widget files exist, preserve those boundaries in the target app instead of merging them into one page.
-- A single self-contained `city-weather.html` is acceptable only when the export truly contains one user-facing screen and its CSS/JS are structured enough to extract tokens, components, states, and behavior.
+- A single self-contained `city.html` is acceptable only when the export truly contains one user-facing screen and its CSS/JS are structured enough to extract tokens, components, states, and behavior.
 - If separate `css/` or `js/` files exist, treat them as source of truth for token/component/interactions before porting to React, Vue, SwiftUI, Compose, or another target stack.
 - In-app modules/components are product UI blocks inside the app. OS widgets are home-screen/lock-screen/quick-access surfaces outside the app. Do not merge those concepts.
 
@@ -53,7 +53,7 @@ For responsive web exports, treat these as a modern breakpoint system for one ad
 - No obvious token stylesheet was detected; sample colors from the entry file and convert them into named tokens before coding.
 
 ## Implementation sequence for AI coding tools
-1. Open `city-weather.html` and `DESIGN-MANIFEST.json`; identify every screen file, launcher/overview file, app module, and interaction before coding.
+1. Open `city.html` and `DESIGN-MANIFEST.json`; identify every screen file, launcher/overview file, app module, and interaction before coding.
 2. If multiple HTML screens exist, map them to separate routes/surfaces first; do not merge `landing.html`, product app screens, platform screens, or OS widgets into one route.
 3. Extract a token table from CSS/root styles and inline styles before building framework components.
 4. Build product screens and domain-specific in-app modules from largest layout regions down to controls; avoid starting with isolated atoms that lose spatial intent.
@@ -63,8 +63,8 @@ For responsive web exports, treat these as a modern breakpoint system for one ad
 8. Compare final screenshots against the export at 360×800, 390×844, 430×932, 820×1180, 1024×768, 1366×768, 1440×900, and 1920×1080 before declaring done.
 
 ## Entry points
-- `city-weather.html`
-- `weathergpt-minimal-dashboard.html`
+- `city.html`
+- `index.html`
 
 ## Styles
 - None detected
@@ -76,7 +76,7 @@ For responsive web exports, treat these as a modern breakpoint system for one ad
 - `README.md`
 
 ## Coding checklist for AI tools
-1. Inspect `city-weather.html` and `DESIGN-MANIFEST.json` first and identify reusable components before coding.
+1. Inspect `city.html` and `DESIGN-MANIFEST.json` first and identify reusable components before coding.
 2. Implement each user-facing screen file as its own route/surface; keep launcher, landing, app, platform, and OS widget files separate.
 3. Extract design tokens into the target stack: colors, type scale, spacing, radius, shadows, and motion.
 4. Implement layout with real 2025–2026 responsive breakpoints, fluid type/spacing, and container-query-aware component behavior; test with no horizontal overflow.

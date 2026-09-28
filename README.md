@@ -5,9 +5,9 @@ Same Corporate token system, dark mode, and EN/Hindi toggle on every page.
 
 ## Pages
 
-- `weathergpt-minimal-dashboard.html` — home dashboard: assistant chatbot + hazard
+- `index.html` — home dashboard: assistant chatbot + hazard
   map on top, KPI cards, 7-day outlook, gauges, timeline, shelters, bulletins.
-- `city-weather.html` — pincode deep-link page (`?pin=781001&city=guwahati&lang=en`):
+- `city.html` — pincode deep-link page (`?pin=781001&city=guwahati&lang=en`):
   same UI with per-city alert banner, 7-day alert levels, live Leaflet map.
 
 ## Run

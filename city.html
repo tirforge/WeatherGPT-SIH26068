@@ -100,8 +100,8 @@ button{font:inherit;cursor:pointer}
 <body>
 <header class="topnav" data-od-id="topnav">
 <div class="container topnav-inner">
-<a class="logo" href="weathergpt-minimal-dashboard.html" style="display:inline-flex;align-items:center;gap:8px;"><img src="weather-logo.svg" alt="WeatherGPT logo" width="28" height="28" style="border-radius:8px;" />← WeatherGPT <span class="meta">SIH26068</span></a>
-<nav><a href="weathergpt-minimal-dashboard.html" data-i18n="home">Home</a><a href="#city-dashboard" data-i18n="overview">Overview</a><a href="#city-map" data-i18n="map">Map</a></nav>
+<a class="logo" href="index.html" style="display:inline-flex;align-items:center;gap:8px;"><img src="weather-logo.svg" alt="WeatherGPT logo" width="28" height="28" style="border-radius:8px;" />← WeatherGPT <span class="meta">SIH26068</span></a>
+<nav><a href="index.html" data-i18n="home">Home</a><a href="#city-dashboard" data-i18n="overview">Overview</a><a href="#city-map" data-i18n="map">Map</a></nav>
 <div class="row"><button class="themebtn" id="langBtn" data-od-id="btn-lang" onclick="toggleLang()" title="EN / हिंदी">EN</button><button class="themebtn" id="themeBtn" data-od-id="btn-theme" onclick="toggleTheme()" title="Dark mode">◐</button><button class="btn btn-primary" data-od-id="cta-bulletin" onclick="openModal()" data-i18n="getBulletin">Get bulletin</button></div>
 </div>
 </header>
@@ -145,7 +145,7 @@ button{font:inherit;cursor:pointer}
 <div data-od-id="city-timeline"><p class="meta" style="margin-bottom:12px;" data-i18n="timeline">ACTIONABLE TIMELINE · NEXT 15 HOURS</p><div class="timeline" id="timeline"></div></div>
 <div class="grid-2" data-od-id="city-relief">
 <div class="stack"><p class="meta" data-i18n="relief">NEARBY RELIEF · SHELTERS + HOSPITALS</p><div class="shelters" id="shelters"></div></div>
-<div class="card" data-od-id="city-rule"><p class="meta">DECISION TRACE</p><h3 id="ruleTitle" style="margin-top:8px;">Why this level?</h3><p class="meta" id="ruleLong" style="margin-top:8px;">Threshold engine: IMD-inspired bands + GloFAS discharge check.</p><div class="row" style="margin-top:16px;"><button class="btn btn-primary" onclick="openModal()" data-i18n="getBulletin2">Generate bulletin</button><a class="btn btn-secondary" href="weathergpt-minimal-dashboard.html" data-i18n="backHome">← All cities</a></div></div>
+<div class="card" data-od-id="city-rule"><p class="meta">DECISION TRACE</p><h3 id="ruleTitle" style="margin-top:8px;">Why this level?</h3><p class="meta" id="ruleLong" style="margin-top:8px;">Threshold engine: IMD-inspired bands + GloFAS discharge check.</p><div class="row" style="margin-top:16px;"><button class="btn btn-primary" onclick="openModal()" data-i18n="getBulletin2">Generate bulletin</button><a class="btn btn-secondary" href="index.html" data-i18n="backHome">← All cities</a></div></div>
 </div>
 </div>
 </section>
@@ -180,7 +180,7 @@ function pinCityKey(){return q('city')||PINDB[q('pin')]||'guwahati'}
 (function(){LANG=q('lang')||'en';try{LANG=localStorage.getItem('wg-lang')||LANG}catch(e){}pin=q('pin')||'781001';var key=PINDB[pin]||q('city')||'guwahati';var mirror=false;if(!DATA[key]&&MIRROR[key]){cur=MIRROR[key];mirror=true;document.getElementById('mirrorNote').style.display='block'}else{cur=DATA[key]?key:'guwahati'}try{var t=localStorage.getItem('wg-theme-v2');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='◑'}}catch(e){}applyLang();var ck=COORDS[pin]||COORDS[key]||COORDS[cur];if(!COORDS[pin]&&COORDS[key]){ck=COORDS[key]}initMap(ck[0],ck[1]);render();document.getElementById('modal').addEventListener('click',function(e){if(e.target===this){closeModal()}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal()}})})();
 </script>
 <script src="config.js"></script>
-<script src="weathergpt-app.js?v=3.1"></script>
-<script src="weathergpt-plus.js?v=3.1"></script>
+<script src="app.js?v=4.0"></script>
+<script src="plus.js?v=4.0"></script>
 </body>
 </html>

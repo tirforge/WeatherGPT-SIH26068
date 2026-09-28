@@ -1,16 +1,16 @@
 {
   "schema": "open-design.design-manifest.v1",
   "title": "weathergpt-repo",
-  "entryFile": "city-weather.html",
+  "entryFile": "city.html",
   "sourceFiles": {
     "all": [
-      "city-weather.html",
+      "city.html",
       "README.md",
-      "weathergpt-minimal-dashboard.html"
+      "index.html"
     ],
     "html": [
-      "city-weather.html",
-      "weathergpt-minimal-dashboard.html"
+      "city.html",
+      "index.html"
     ],
     "css": [],
     "scriptsAndComponents": [],
@@ -20,12 +20,12 @@
   },
   "screens": [
     {
-      "file": "city-weather.html",
+      "file": "city.html",
       "role": "screen",
       "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
     },
     {
-      "file": "weathergpt-minimal-dashboard.html",
+      "file": "index.html",
       "role": "product-screen",
       "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
     }
@@ -61,7 +61,7 @@
   },
   "tokens": {
     "source": [
-      "city-weather.html"
+      "city.html"
     ],
     "required": [
       "background",
@@ -80,7 +80,7 @@
   },
   "interactions": {
     "source": [
-      "city-weather.html"
+      "city.html"
     ],
     "requiredStates": [
       "default",

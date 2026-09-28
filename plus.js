@@ -1,5 +1,5 @@
 /* WeatherGPT — Plus pack PART 1: city data (ported from SIH26068 model-data.js).
- * Loaded AFTER weathergpt-app.js on both pages. Extends global DATA/COORDS/
+ * Loaded AFTER app.js on both pages. Extends global DATA/COORDS/
  * SHELTER_PTS/PINDB additively — never overwrites existing entries.
  * Works on dashboard (selectCity) and city page (render via PINDB, mirrors bypassed).
  */

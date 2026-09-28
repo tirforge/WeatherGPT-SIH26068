@@ -7,8 +7,8 @@
   'use strict';
 
   var $ = function (id) { return document.getElementById(id); };
-  var IS_DASH = !!$('chatBody');           // weathergpt-minimal-dashboard.html
-  var IS_CITY = !!$('pinForm2');           // city-weather.html
+  var IS_DASH = !!$('chatBody');           // index.html
+  var IS_CITY = !!$('pinForm2');           // city.html
   if (!IS_DASH && !IS_CITY) return;
 
   var WG = {
@@ -836,7 +836,7 @@
   function dashMic(btn) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { dashBubble('ai', 'Voice typing needs <strong>Chrome or Edge</strong>. Please type instead.'); return; }
-    if (window.location.protocol === 'file:') { dashBubble('ai', 'Voice is blocked on <strong>file://</strong>. Open <strong>http://localhost:3001/weathergpt-minimal-dashboard.html</strong> instead.'); return; }
+    if (window.location.protocol === 'file:') { dashBubble('ai', 'Voice is blocked on <strong>file://</strong>. Open <strong>http://localhost:3001/index.html</strong> instead.'); return; }
     if (WG.listening) { try { WG.recog.stop(); } catch (e) {} return; }
     if (!WG.recog) {
       WG.recog = new SR();
@@ -1328,7 +1328,7 @@
       var msg = $('pinMsg');
       var city = (window.PINDB || {})[v];
       if (city) {
-        window.location.href = 'city-weather.html?pin=' + encodeURIComponent(v) + '&city=' + encodeURIComponent(city) + '&lang=' + encodeURIComponent(window.LANG || 'en');
+        window.location.href = 'city.html?pin=' + encodeURIComponent(v) + '&city=' + encodeURIComponent(city) + '&lang=' + encodeURIComponent(window.LANG || 'en');
         return false;
       }
       if (!/^[1-9][0-9]{5}$/.test(v)) {
@@ -1341,7 +1341,7 @@
           if (msg) msg.textContent = r.error === 'unknown' ? 'Unknown pincode — no postal record found.' : 'Could not resolve this pincode. Try 781001, 400001, 600001 or 110001.';
           return;
         }
-        window.location.href = 'city-weather.html?pin=' + encodeURIComponent(v) + '&city=' + encodeURIComponent(r.key) +
+        window.location.href = 'city.html?pin=' + encodeURIComponent(v) + '&city=' + encodeURIComponent(r.key) +
           '&lat=' + r.lat + '&lon=' + r.lon + '&name=' + encodeURIComponent(r.name) + '&lang=' + encodeURIComponent(window.LANG || 'en');
       });
       return false;
@@ -1491,7 +1491,7 @@
     });
   }
 
-  /* ---------- City page: custom-pincode entry (city-weather DATA shape) ---------- */
+  /* ---------- City page: custom-pincode entry (city.html DATA shape) ---------- */
   function buildCityEntry(key, dispName, sub, lat, lon, live) {
     var w = (live && live.w) || {};
     var cur = w.current || {}, d = w.daily || {};

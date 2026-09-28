@@ -2,7 +2,7 @@
   "name": "WeatherGPT SIH26068",
   "short_name": "WeatherGPT",
   "description": "Conversational Weather & Disaster Intelligence for India",
-  "start_url": "./weathergpt-minimal-dashboard.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0e63b6",

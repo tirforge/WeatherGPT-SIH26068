@@ -1,6 +1,6 @@
 // WeatherGPT Documents PWA — offline shell cache + Red-alert push handler
-var CACHE = 'weathergpt-doc-v1';
-var CORE = ['./weathergpt-minimal-dashboard.html', './city-weather.html', './weathergpt-app.js', './weathergpt-plus.js', './manifest.json', './weather-logo.svg'];
+var CACHE = 'weathergpt-doc-v2';
+var CORE = ['./index.html', './city.html', './app.js', './plus.js', './manifest.json', './weather-logo.svg'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CORE); }).then(function () { return self.skipWaiting(); }));
 });
@@ -21,5 +21,5 @@ self.addEventListener('push', function (e) {
 });
 self.addEventListener('notificationclick', function (e) {
   e.notification.close();
-  e.waitUntil(clients.openWindow('./weathergpt-minimal-dashboard.html'));
+  e.waitUntil(clients.openWindow('./index.html'));
 });

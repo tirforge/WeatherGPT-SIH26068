@@ -365,7 +365,7 @@ try{LANG=localStorage.getItem('wg-lang')||'en'}catch(e){}
 var PINDB={'781001':'guwahati','781005':'guwahati','400001':'mumbai','400050':'mumbai','600001':'chennai','600028':'chennai','110001':'delhi','110059':'delhi','700001':'kolkata','560001':'bengaluru'};
 function applyLang(){var d=I18N[LANG]||I18N.en;var els=document.querySelectorAll('[data-i18n]');for(var i=0;i<els.length;i++){var k=els[i].getAttribute('data-i18n');if(d[k]){els[i].textContent=d[k]}}document.getElementById('pinInput').placeholder=d.pinPh;document.getElementById('chatInput').placeholder=d.chatPh;document.getElementById('langBtn').textContent=LANG==='hi'?'हिं':'EN';document.documentElement.setAttribute('lang',LANG==='hi'?'hi':'en')}
 function toggleLang(){LANG=LANG==='hi'?'en':'hi';try{localStorage.setItem('wg-lang',LANG)}catch(e){}applyLang()}
-function goPincode(e){if(e){e.preventDefault()}var v=(document.getElementById('pinInput').value||'').replace(/\D/g,'');var city=PINDB[v];if(!city){document.getElementById('pinMsg').textContent=(I18N[LANG]||I18N.en).pinErr;return false}window.location.href='city-weather.html?pin='+encodeURIComponent(v)+'&city='+encodeURIComponent(city)+'&lang='+encodeURIComponent(LANG);return false}
+function goPincode(e){if(e){e.preventDefault()}var v=(document.getElementById('pinInput').value||'').replace(/\D/g,'');var city=PINDB[v];if(!city){document.getElementById('pinMsg').textContent=(I18N[LANG]||I18N.en).pinErr;return false}window.location.href='city.html?pin='+encodeURIComponent(v)+'&city='+encodeURIComponent(city)+'&lang='+encodeURIComponent(LANG);return false}
 var COORDS={guwahati:[26.18,91.75,11],mumbai:[19.07,72.87,11],chennai:[13.08,80.27,11],delhi:[28.61,77.20,11]};
 var SHELTER_PTS={guwahati:[[26.19,91.77,'Dispur Relief Camp'],[26.17,91.74,'GMCH Emergency']],mumbai:[[19.06,72.84,'Bandra Shelter'],[19.11,72.86,'Andheri Pump']],chennai:[[13.01,80.22,'Guindy Centre'],[12.99,80.26,'Velachery School']],delhi:[[28.60,77.09,'Najafgarh Shelter'],[28.56,77.21,'AIIMS Emergency']]};
 var map=null,baseLight=null,baseDark=null,floodLayer=null,shelterLayer=null;
@@ -394,7 +394,7 @@ try{var st=localStorage.getItem('wg-theme-v2');if(st==='dark'){document.document
 initMap();
 </script>
 <script src="config.js"></script>
-<script src="weathergpt-app.js?v=3.1"></script>
-<script src="weathergpt-plus.js?v=3.1"></script>
+<script src="app.js?v=4.0"></script>
+<script src="plus.js?v=4.0"></script>
 </body>
 </html>
