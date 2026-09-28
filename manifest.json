@@ -2,13 +2,13 @@
   "name": "WeatherGPT SIH26068",
   "short_name": "WeatherGPT",
   "description": "Conversational Weather & Disaster Intelligence for India",
-  "start_url": "./index.html",
+  "start_url": "./weathergpt-minimal-dashboard.html",
   "display": "standalone",
-  "background_color": "#0F172A",
-  "theme_color": "#0E63B6",
+  "background_color": "#0f172a",
+  "theme_color": "#0e63b6",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>",
+      "src": "weather-logo.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }

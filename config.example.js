@@ -3,14 +3,11 @@
 window.WG_CONFIG = {
   // Groq chatbot (https://console.groq.com) - free tier
   groqApiKey: "", // e.g. "gsk_..."
-  groqModel: "groq/compound-mini",
+  groqModel: "openai/gpt-oss-20b",
   groqEndpoint: "https://api.groq.com/openai/v1/chat/completions",
 
   // Map style - 100% FREE, no keys: "osm" | "esri-sat"
   mapStyle: "osm",
-
-  // Scalable backend (optional): FastAPI base URL + WS /ws/alerts
-  backendBase: "http://localhost:8000",
 
   // Telegram alerts (optional) - bot token from @BotFather + your chat ID
   telegramBotToken: "",

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0e63b6" />
+<link rel="manifest" href="./manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<title>City Weather — WeatherGPT SIH26068</title>
+<link rel="icon" href="weather-logo.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --bg: #f5f8ff; --surface: #ffffff; --surface-warm: #eaf1ff; --fg: #101828; --fg-2: #344054;
+  --muted: #667085; --meta: #2563eb; --border: #d7e0ef; --border-soft: #edf2f8;
+  --accent: #2563eb; --accent-on: #ffffff; --accent-hover: color-mix(in oklab, var(--accent), black 8%);
+  --success: #16a34a; --warn: #f59e0b; --danger: #ef4444;
+  --font-display: Inter, system-ui, sans-serif; --font-body: Inter, system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Menlo, monospace;
+  --text-xs: 12px; --text-sm: 14px; --text-base: 16px; --text-lg: 18px; --text-2xl: 36px; --text-3xl: 54px;
+  --leading-body: 1.52; --leading-tight: 1.06; --tracking-display: -0.025em;
+  --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px; --radius-pill: 9999px;
+  --focus-ring: 0 0 0 4px rgba(37, 99, 235, 0.22);
+  --motion-fast: 150ms; --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --container-max: 1180px; --container-gutter-desktop: 36px; --container-gutter-tablet: 24px;
+}
+html[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-warm:#16233c;--fg:#F1F5F9;--fg-2:#CBD5E1;--muted:#94A3B8;--meta:#7aa5ff;--border:#334155;--border-soft:#243349;--accent:#5b93ff;--accent-on:#0B1220;--accent-hover:#7aa5ff;--success:#22c55e;--warn:#f59e0b;--danger:#f87171}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:var(--text-base);line-height:var(--leading-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:var(--tracking-display);line-height:var(--leading-tight);margin:0}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.container{max-width:var(--container-max);margin-inline:auto;padding-inline:var(--container-gutter-desktop)}
+.section{padding-block:56px}
+.section + .section{border-top:1px solid var(--border)}
+@media(max-width:920px){.container{padding-inline:var(--container-gutter-tablet)}.section{padding-block:40px}}
+.eyebrow{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 var(--space-4)}
+.meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted)}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.wg-dark-tiles{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.92);}.topnav{position:sticky;top:0;z-index:10;background:color-mix(in oklab, var(--bg) 88%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topnav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:14px;gap:12px 16px;min-width:0}
+.topnav nav{display:flex;gap:var(--space-6);align-items:center;flex:1;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;justify-content:flex-start;padding-bottom:2px}
+.topnav nav::-webkit-scrollbar{display:none}
+.topnav nav>*{flex-shrink:0}
+.logo{font-family:var(--font-display);font-weight:700;font-size:19px}
+@media(max-width:900px){.topnav nav{gap:12px}.topnav nav::-webkit-scrollbar{display:none}}
+.topnav nav a{font-size:var(--text-sm);color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:var(--radius-md);border:1px solid transparent;font-size:15px;font-weight:600;min-height:44px}
+.btn-primary{background:var(--accent);color:var(--accent-on);border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:transparent;color:var(--fg);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--fg)}
+.btn:focus-visible,a:focus-visible,input:focus-visible,button:focus-visible{outline:none;box-shadow:var(--focus-ring);border-radius:10px}
+.themebtn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:920px){.grid-4,.grid-2{grid-template-columns:1fr}}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px}
+.kpi-val{font-family:var(--font-mono);font-size:28px;font-weight:700}
+.kpi-sub{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.alertbar{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-left:6px solid var(--danger);border-radius:var(--radius-md);padding:14px 18px;flex-wrap:wrap}
+.alertshape{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--fg);color:var(--surface);font-weight:800}
+.pill{display:inline-flex;align-items:center;padding:4px 10px;background:color-mix(in oklab, var(--accent) 12%, transparent);color:var(--accent);border-radius:var(--radius-pill);font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.fstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+@media(max-width:920px){.fstrip{grid-template-columns:repeat(7,132px);overflow-x:auto;padding-bottom:8px}}
+.fday{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 10px;text-align:center}
+.fday.today{border-color:var(--fg)}
+.fbar{height:5px;border-radius:99px;background:var(--border-soft);margin:8px 0;overflow:hidden}
+.fbar i{display:block;height:100%;background:var(--accent)}
+.lvl{display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;margin-top:6px}
+.lvl.red{background:color-mix(in oklab, var(--danger) 14%, transparent);color:var(--danger)}
+.lvl.orange{background:color-mix(in oklab, var(--warn) 18%, transparent);color:var(--fg)}
+.lvl.yellow{background:color-mix(in oklab, var(--warn) 14%, transparent);color:var(--fg)}
+.lvl.green{background:color-mix(in oklab, var(--success) 14%, transparent);color:var(--success)}
+#map{height:340px;background:var(--surface-warm);z-index:1}
+.leaflet-container{font-family:var(--font-body)}
+.mapwrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+.mapbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:920px){.timeline{grid-template-columns:1fr 1fr}}
+.tslot{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-size:13px}
+.shelters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:920px){.shelters{grid-template-columns:1fr}}
+.shelter{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px}
+.modal{position:fixed;inset:0;background:color-mix(in oklab, var(--fg) 55%, transparent);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.open{display:flex}
+.modal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:28px}
+.pagefoot{padding-block:32px;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
+.input{padding:11px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit;font-size:15px}
+</style>
+</head>
+<body>
+<header class="topnav" data-od-id="topnav">
+<div class="container topnav-inner">
+<a class="logo" href="weathergpt-minimal-dashboard.html" style="display:inline-flex;align-items:center;gap:8px;"><img src="weather-logo.svg" alt="WeatherGPT logo" width="28" height="28" style="border-radius:8px;" />← WeatherGPT <span class="meta">SIH26068</span></a>
+<nav><a href="weathergpt-minimal-dashboard.html" data-i18n="home">Home</a><a href="#city-dashboard" data-i18n="overview">Overview</a><a href="#city-map" data-i18n="map">Map</a></nav>
+<div class="row"><button class="themebtn" id="langBtn" data-od-id="btn-lang" onclick="toggleLang()" title="EN / हिंदी">EN</button><button class="themebtn" id="themeBtn" data-od-id="btn-theme" onclick="toggleTheme()" title="Dark mode">◐</button><button class="btn btn-primary" data-od-id="cta-bulletin" onclick="openModal()" data-i18n="getBulletin">Get bulletin</button></div>
+</div>
+</header>
+<main id="content">
+<section class="section" data-od-id="city-hero">
+<div class="container stack">
+<p class="eyebrow" id="crumb">PINCODE 781001 · IMD-GROUNDED</p>
+<h1 style="font-size:var(--text-3xl);" id="cityTitle">Guwahati — Red flood emergency</h1>
+<p class="meta" id="citySub">KAMRUP METRO · Updated 05:30 IST · IMD v1.2</p>
+<form id="pinForm2" data-od-id="pincode-form-2" onsubmit="return goPin(event)" class="row" style="flex-wrap:wrap;">
+<input id="pinInput2" class="input" inputmode="numeric" maxlength="6" placeholder="Try another pincode — e.g. 400001" aria-label="Pincode" style="max-width:260px;" />
+<button class="btn btn-secondary" type="submit" data-i18n="openCity">Open city page →</button>
+</form>
+<p class="meta" id="pinMsg2"></p>
+<p class="meta" id="mirrorNote" style="display:none;">Demo telemetry mirrored — full station feed coming soon.</p>
+</div>
+</section>
+<section class="section" id="city-dashboard" data-od-id="city-alert" style="padding-top:0;">
+<div class="container stack">
+<div class="alertbar" data-od-id="alert-banner">
+<div class="alertshape" id="alertShape">▲</div>
+<div style="flex:1;min-width:220px;"><span class="pill" id="alertPill">RED · EMERGENCY</span>
+<p class="meta" id="ruleTrace" style="margin-top:6px;">3-day 168 mm (&gt;150) + discharge 92% (&gt;80%) = Flood Red</p></div>
+<button class="btn btn-secondary" onclick="openWhy()" data-i18n="whyBtn">Why this level?</button>
+</div>
+<div class="grid-4" data-od-id="kpi-row">
+<div class="kpi" data-od-id="kpi-temp"><div class="kpi-top"><span data-i18n="temp">Temperature</span><span class="dot" style="background:var(--warn)"></span></div><div class="kpi-val num" id="kpiTemp">29.4°C</div><div class="kpi-sub"><span>Feels <span class="num" id="kpiFeels">33°C</span></span><span class="num">24°/30°</span></div></div>
+<div class="kpi" data-od-id="kpi-rain"><div class="kpi-top"><span data-i18n="rain">Rain 24h</span><span class="dot" style="background:var(--danger)"></span></div><div class="kpi-val num" id="kpiRain">88.5 mm</div><div class="kpi-sub"><span>3-day <span class="num" id="kpiRain3">168 mm</span></span><span id="kpiRainLabel">Heavy</span></div></div>
+<div class="kpi" data-od-id="kpi-wind"><div class="kpi-top"><span data-i18n="wind">Wind</span><span class="dot" style="background:var(--warn)"></span></div><div class="kpi-val num" id="kpiWind">38 km/h</div><div class="kpi-sub"><span>Gust <span class="num" id="kpiGust">52 km/h</span></span><span class="num">SW 210°</span></div></div>
+<div class="kpi" data-od-id="kpi-aqi"><div class="kpi-top"><span>AQI</span><span class="dot" style="background:var(--success)"></span></div><div class="kpi-val num" id="kpiAqi">48</div><div class="kpi-sub"><span>PM2.5 <span class="num" id="kpiPm">14</span></span><span id="kpiAqiLabel">Good</span></div></div>
+</div>
+<div data-od-id="city-forecast"><p class="meta" style="margin-bottom:12px;" data-i18n="sevenDay">7-DAY ALERT OUTLOOK · LEVEL PER DAY</p><div class="fstrip" id="fstrip"></div></div>
+</div>
+</section>
+<section class="section" id="city-map" data-od-id="city-map-section" style="padding-top:0;">
+<div class="container stack">
+<div class="mapwrap" data-od-id="map-module">
+<div class="mapbar"><span class="meta">HAZARD MAP · <span id="mapCity">GUWAHATI</span></span><span class="meta"><label><input type="checkbox" id="lyrFlood" checked onchange="toggleLayer()" /> Flood</label> · <label><input type="checkbox" id="lyrShelter" checked onchange="toggleLayer()" /> Shelters</label></span></div>
+<div id="map" role="application" aria-label="City hazard map"></div>
+</div>
+<div data-od-id="city-timeline"><p class="meta" style="margin-bottom:12px;" data-i18n="timeline">ACTIONABLE TIMELINE · NEXT 15 HOURS</p><div class="timeline" id="timeline"></div></div>
+<div class="grid-2" data-od-id="city-relief">
+<div class="stack"><p class="meta" data-i18n="relief">NEARBY RELIEF · SHELTERS + HOSPITALS</p><div class="shelters" id="shelters"></div></div>
+<div class="card" data-od-id="city-rule"><p class="meta">DECISION TRACE</p><h3 id="ruleTitle" style="margin-top:8px;">Why this level?</h3><p class="meta" id="ruleLong" style="margin-top:8px;">Threshold engine: IMD-inspired bands + GloFAS discharge check.</p><div class="row" style="margin-top:16px;"><button class="btn btn-primary" onclick="openModal()" data-i18n="getBulletin2">Generate bulletin</button><a class="btn btn-secondary" href="weathergpt-minimal-dashboard.html" data-i18n="backHome">← All cities</a></div></div>
+</div>
+</div>
+</section>
+</main>
+<footer class="pagefoot" data-od-id="footer"><div class="container row" style="justify-content:space-between;flex-wrap:wrap;"><span>© WeatherGPT SIH26068 · 2026</span><span class="meta">Open-Meteo · GloFAS · IMD v1.2</span></div></footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Bulletin"><div class="modal-card"><p class="eyebrow">IMD special bulletin</p><h3 id="bTitle">GUWAHATI — RED FLOOD EMERGENCY</h3><p class="meta" id="bMeta">REF IMD/SIH/09-08 · 06:00 IST</p><ul style="font-size:14px;line-height:1.7;padding-left:18px;" id="bList"><li><strong>Farmers:</strong> stop spraying, open field drains.</li><li><strong>Fishermen:</strong> stay off river water, secure boats inland.</li><li><strong>Citizens:</strong> avoid underpasses, keep emergency kit ready.</li></ul><div class="row" style="justify-content:flex-end;margin-top:16px;"><button class="btn btn-secondary" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="window.print()">Print / PDF</button></div></div></div>
+<script>
+var I18N={en:{home:'Home',overview:'Overview',map:'Map',getBulletin:'Get bulletin',getBulletin2:'Generate bulletin',backHome:'← All cities',openCity:'Open city page →',whyBtn:'Why this level?',temp:'Temperature',rain:'Rain 24h',wind:'Wind',sevenDay:'7-DAY ALERT OUTLOOK · LEVEL PER DAY',timeline:'ACTIONABLE TIMELINE · NEXT 15 HOURS',relief:'NEARBY RELIEF · SHELTERS + HOSPITALS',pinErr:'Unknown pincode. Try 781001, 400001, 600001, 110001.'},hi:{home:'होम',overview:'अवलोकन',map:'नक्शा',getBulletin:'बुलेटिन लें',getBulletin2:'बुलेटिन बनाएं',backHome:'← सभी शहर',openCity:'शहर पेज खोलें →',whyBtn:'यह स्तर क्यों?',temp:'तापमान',rain:'24 घंटे बारिश',wind:'हवा',sevenDay:'7-दिन अलर्ट · प्रतिदिन स्तर',timeline:'अगले 15 घंटे · कार्य योजना',relief:'आस-पास राहत · आश्रय + अस्पताल',pinErr:'अज्ञात पिनकोड। 781001, 400001, 600001, 110001 आज़माएं।'}};
+var LANG='en';
+var DATA={
+guwahati:{name:'Guwahati',pin:'781001',level:'RED · EMERGENCY',shape:'▲',edge:'var(--danger)',title:'Guwahati — Red flood emergency',sub:'KAMRUP METRO · Updated 05:30 IST · IMD v1.2',temp:'29.4°C',feels:'33°C',rain:'88.5 mm',rain3:'168 mm',rainLabel:'Heavy',wind:'38 km/h',gust:'52 km/h',aqi:'48',pm:'14',aqiLabel:'Good',rule:'3-day 168 mm (>150) + discharge 92% (>80%) = Flood Red',days:[['Mon','30°/24°',90,'red','RED'],['Tue','29°/24°',85,'red','RED'],['Wed','28°/23°',70,'orange','ORANGE'],['Thu','29°/24°',55,'orange','ORANGE'],['Fri','31°/24°',30,'yellow','YELLOW'],['Sat','32°/25°',20,'yellow','YELLOW'],['Sun','31°/25°',25,'yellow','YELLOW']],time:[['6–9 AM','Hold','Spray only if rain < 10 mm'],['9–12 PM','Avoid','Riverfront travel, suspend irrigation'],['12–3 PM','Avoid','Peak rain 42 mm expected'],['3–6 PM','Caution','Drain check, livestock to high ground'],['6–9 PM','Caution','Night shelter plan, charge devices']],shelters:[['Dispur Relief Camp','0.8 km · 240 beds · Open'],['Dighalipukhuri School','1.6 km · 180 beds'],['GMCH Emergency','2.4 km · 24×7'],['Bharalumukh Ghat','1.1 km · Boat rescue']]},
+mumbai:{name:'Mumbai',pin:'400001',level:'ORANGE · ALERT',shape:'◆',edge:'var(--warn)',title:'Mumbai — Orange tide + rain alert',sub:'KONKAN COAST · Updated 05:00 IST · IMD v1.2',temp:'28.1°C',feels:'31°C',rain:'64.2 mm',rain3:'121 mm',rainLabel:'Heavy',wind:'47 km/h',gust:'58 km/h',aqi:'52',pm:'19',aqiLabel:'Satisfactory',rule:'24-h 64 mm (>40) + tide 4.48 m at 13:15 IST = Orange',days:[['Mon','29°/26°',80,'orange','ORANGE'],['Tue','28°/26°',75,'orange','ORANGE'],['Wed','28°/25°',60,'orange','ORANGE'],['Thu','29°/26°',45,'yellow','YELLOW'],['Fri','30°/26°',30,'yellow','YELLOW'],['Sat','30°/27°',20,'green','GREEN'],['Sun','30°/26°',25,'yellow','YELLOW']],time:[['6–9 AM','Caution','Local trains delayed, leave early'],['9–12 PM','Avoid','Low-lying Andheri subway'],['12–3 PM','Avoid','High tide peak 4.48 m'],['3–6 PM','Caution','Pump rooms on standby'],['6–9 PM','Hold','Resume travel after tide falls']],shelters:[['Bandra Station Shelter','0.5 km · 300 beds'],['Andheri Subway Pump','0.9 km · Pumps active'],['KEM Hospital','3.1 km · 24×7'],['Versova Rescue Boat','1.4 km · 6 boats']]},
+chennai:{name:'Chennai',pin:'600001',level:'YELLOW · WATCH',shape:'●',edge:'var(--warn)',title:'Chennai — Yellow shower watch',sub:'COASTAL TAMIL NADU · Updated 04:30 IST · IMD v1.2',temp:'31.2°C',feels:'34°C',rain:'22.4 mm',rain3:'38 mm',rainLabel:'Moderate',wind:'28 km/h',gust:'36 km/h',aqi:'68',pm:'26',aqiLabel:'Satisfactory',rule:'24-h 22 mm (10–40) + gust 36 km/h = Yellow watch',days:[['Mon','32°/27°',60,'yellow','YELLOW'],['Tue','31°/27°',55,'yellow','YELLOW'],['Wed','31°/26°',40,'yellow','YELLOW'],['Thu','32°/27°',30,'green','GREEN'],['Fri','33°/27°',20,'green','GREEN'],['Sat','33°/28°',15,'green','GREEN'],['Sun','32°/27°',25,'yellow','YELLOW']],time:[['6–9 AM','Open','Normal commute, carry rain cover'],['9–12 PM','Open','Fishing to 10 km permitted'],['12–3 PM','Caution','Convective burst likely'],['3–6 PM','Open','Evening markets normal'],['6–9 PM','Open','Night fishing with VHF check']],shelters:[['Guindy Relief Centre','1.2 km · 150 beds'],['Velachery School','2.0 km · 200 beds'],['GH Chennai','4.0 km · 24×7'],['Marina Watch Post','1.8 km · Lifeguard']]},
+delhi:{name:'Delhi',pin:'110001',level:'YELLOW · WATCH',shape:'●',edge:'var(--warn)',title:'Delhi — Yellow haze + drizzle',sub:'NCR · Updated 04:00 IST · IMD v1.2',temp:'30.6°C',feels:'32°C',rain:'6.8 mm',rain3:'11 mm',rainLabel:'Light',wind:'18 km/h',gust:'27 km/h',aqi:'242',pm:'148',aqiLabel:'Poor',rule:'AQI 242 + drizzle 6.8 mm = Yellow haze advisory',days:[['Mon','31°/24°',30,'yellow','YELLOW'],['Tue','31°/23°',20,'green','GREEN'],['Wed','32°/24°',10,'green','GREEN'],['Thu','33°/24°',10,'green','GREEN'],['Fri','33°/25°',5,'green','GREEN'],['Sat','32°/24°',10,'green','GREEN'],['Sun','31°/24°',20,'yellow','YELLOW']],time:[['6–9 AM','Caution','Mask for cycling, low visibility'],['9–12 PM','Open','Outdoor work with breaks'],['12–3 PM','Open','Drizzle clears dust briefly'],['3–6 PM','Caution','Asthma advisory, limit exertion'],['6–9 PM','Caution','Haze returns, indoor filters on']],shelters:[['Najafgarh Shelter','2.2 km · 120 beds'],['AIIMS Emergency','5.0 km · 24×7'],['Anand Vihar Helpdesk','3.3 km · Masks + water'],['Yamuna Watch Post','4.1 km · Level normal']]}};
+var COORDS={guwahati:[26.18,91.75],mumbai:[19.07,72.87],chennai:[13.08,80.27],delhi:[28.61,77.20],kolkata:[22.57,88.36],bengaluru:[12.97,77.59]};
+var PINDB={'781001':'guwahati','781005':'guwahati','400001':'mumbai','400050':'mumbai','600001':'chennai','600028':'chennai','110001':'delhi','110059':'delhi','700001':'kolkata','560001':'bengaluru'};
+var MIRROR={kolkata:'guwahati',bengaluru:'chennai'};
+var map=null,baseLight=null,baseDark=null,floodLayer=null,shelterLayer=null,cur='guwahati',pin='781001';
+function q(k){var m=new RegExp('[?&]'+k+'=([^&]*)').exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g,' ')):''}
+function applyLang(){var d=I18N[LANG]||I18N.en;var els=document.querySelectorAll('[data-i18n]');for(var i=0;i<els.length;i++){var k=els[i].getAttribute('data-i18n');if(d[k]){els[i].textContent=d[k]}}document.getElementById('langBtn').textContent=LANG==='hi'?'हिं':'EN';document.documentElement.setAttribute('lang',LANG==='hi'?'hi':'en')}
+function toggleLang(){LANG=LANG==='hi'?'en':'hi';try{localStorage.setItem('wg-lang',LANG)}catch(e){}applyLang()}
+function toggleTheme(){var h=document.documentElement;var nx=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',nx);try{localStorage.setItem('wg-theme-v2',nx)}catch(e){}document.getElementById('themeBtn').textContent=nx==='dark'?'◑':'◐';themeTiles()}
+function themeTiles(){var dark=document.documentElement.getAttribute('data-theme')==='dark';if(!map){return}if(dark){if(baseLight){map.removeLayer(baseLight)}if(!map.hasLayer(baseDark)){baseDark.addTo(map)}}else{if(baseDark){map.removeLayer(baseDark)}if(!map.hasLayer(baseLight)){baseLight.addTo(map)}}}
+function goPin(e){if(e){e.preventDefault()}var v=(document.getElementById('pinInput2').value||'').replace(/\D/g,'');if(!PINDB[v]){document.getElementById('pinMsg2').textContent=(I18N[LANG]||I18N.en).pinErr;return false}location.search='?pin='+encodeURIComponent(v)+'&city='+encodeURIComponent(PINDB[v])+'&lang='+encodeURIComponent(LANG);return false}
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function openWhy(){document.getElementById('ruleLong').textContent=DATA[cur].rule+' — thresholds: Green <10 mm, Yellow 10–40 mm, Orange 40–70 mm, Red >70 mm (or 3-day >150 mm + discharge >80%).';location.hash='#city-dashboard'}
+function initMap(lat,lon){if(typeof L==='undefined'){return}map=L.map('map',{scrollWheelZoom:false}).setView([lat,lon],11);if(map.attributionControl){map.attributionControl.setPrefix('WeatherGPT · IMD')}baseLight=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap · IMD overlay'});baseDark=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap · IMD overlay',className:'wg-dark-tiles'});themeTiles();floodLayer=L.layerGroup().addTo(map);shelterLayer=L.layerGroup().addTo(map)}
+function toggleLayer(){if(!map){return}var f=document.getElementById('lyrFlood').checked,s=document.getElementById('lyrShelter').checked;if(f){if(!map.hasLayer(floodLayer)){floodLayer.addTo(map)}}else if(map.hasLayer(floodLayer)){map.removeLayer(floodLayer)}if(s){if(!map.hasLayer(shelterLayer)){shelterLayer.addTo(map)}}else if(map.hasLayer(shelterLayer)){map.removeLayer(shelterLayer)}}
+function render(){var d=DATA[cur];document.getElementById('crumb').textContent='PINCODE '+pin+' · '+d.name.toUpperCase()+' · IMD-GROUNDED';document.getElementById('cityTitle').textContent=d.title;document.getElementById('citySub').textContent=d.sub;document.getElementById('alertPill').textContent=d.level;document.getElementById('alertShape').textContent=d.shape;document.querySelector('.alertbar').style.borderLeftColor=d.edge==='var(--danger)'?'var(--danger)':'var(--warn)';document.getElementById('ruleTrace').textContent=d.rule;document.getElementById('ruleLong').textContent=d.rule+' — thresholds: Green <10 mm, Yellow 10–40 mm, Orange 40–70 mm, Red >70 mm.';document.getElementById('kpiTemp').textContent=d.temp;document.getElementById('kpiFeels').textContent=d.feels;document.getElementById('kpiRain').textContent=d.rain;document.getElementById('kpiRain3').textContent=d.rain3;document.getElementById('kpiRainLabel').textContent=d.rainLabel;document.getElementById('kpiWind').textContent=d.wind;document.getElementById('kpiGust').textContent=d.gust;document.getElementById('kpiAqi').textContent=d.aqi;document.getElementById('kpiPm').textContent=d.pm;document.getElementById('kpiAqiLabel').textContent=d.aqiLabel;document.getElementById('mapCity').textContent=d.name.toUpperCase();document.getElementById('bTitle').textContent=d.name.toUpperCase()+' — '+d.level;var fh='';for(var i=0;i<d.days.length;i++){fh+='<div class="fday'+(i===0?' today':'')+'"><p class="meta">'+d.days[i][0]+'</p><div class="num" style="font-weight:700;margin-top:4px;">'+d.days[i][1]+'</div><div class="fbar"><i style="width:'+d.days[i][2]+'%"></i></div><p class="meta num">'+d.days[i][2]+'%</p><span class="lvl '+d.days[i][3]+'">'+d.days[i][4]+'</span></div>'}document.getElementById('fstrip').innerHTML=fh;var th='';for(var j=0;j<d.time.length;j++){th+='<div class="tslot"><strong class="num">'+d.time[j][0]+'</strong><div style="font-weight:700;margin:4px 0;">'+d.time[j][1]+'</div><div style="color:var(--muted);font-size:12px;">'+d.time[j][2]+'</div></div>'}document.getElementById('timeline').innerHTML=th;var sh='';for(var k=0;k<d.shelters.length;k++){sh+='<div class="shelter"><strong>'+d.shelters[k][0]+'</strong><div class="meta" style="margin-top:4px;">'+d.shelters[k][1]+'</div></div>'}document.getElementById('shelters').innerHTML=sh;if(map){var ck2=COORDS[pin]||COORDS[pinCityKey()]||COORDS[cur];map.setView(ck2,11);floodLayer.clearLayers();shelterLayer.clearLayers();var col=cur==='guwahati'?'#ef4444':cur==='mumbai'?'#f59e0b':'#eab308';L.circle(ck2,{radius:2200,color:col,weight:2,fillColor:col,fillOpacity:0.18}).addTo(floodLayer).bindPopup('<b>'+d.name+'</b><br>'+d.rule);L.circleMarker(ck2,{radius:7,color:'#2563eb',fillColor:'#2563eb',fillOpacity:0.9}).addTo(shelterLayer).bindPopup('<b>'+d.name+' station</b><br>Live telemetry')}}
+function pinCityKey(){return q('city')||PINDB[q('pin')]||'guwahati'}
+(function(){LANG=q('lang')||'en';try{LANG=localStorage.getItem('wg-lang')||LANG}catch(e){}pin=q('pin')||'781001';var key=PINDB[pin]||q('city')||'guwahati';var mirror=false;if(!DATA[key]&&MIRROR[key]){cur=MIRROR[key];mirror=true;document.getElementById('mirrorNote').style.display='block'}else{cur=DATA[key]?key:'guwahati'}try{var t=localStorage.getItem('wg-theme-v2');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='◑'}}catch(e){}applyLang();var ck=COORDS[pin]||COORDS[key]||COORDS[cur];if(!COORDS[pin]&&COORDS[key]){ck=COORDS[key]}initMap(ck[0],ck[1]);render();document.getElementById('modal').addEventListener('click',function(e){if(e.target===this){closeModal()}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal()}})})();
+</script>
+<script src="config.js"></script>
+<script src="weathergpt-app.js?v=3.1"></script>
+<script src="weathergpt-plus.js?v=3.1"></script>
+</body>
+</html>
